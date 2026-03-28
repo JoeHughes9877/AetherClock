@@ -2,7 +2,6 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "stm32f4xx_hal_gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -33,7 +32,7 @@ static void MX_USART2_UART_Init(void);
 /* USER CODE BEGIN PFP */
 /* USER CODE END PFP */
 
-/* Private user co     de ---------------------------------------------------------*/
+/* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 /* USER CODE END 0 */
 
@@ -45,10 +44,10 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
+  _Bool previous_state = 0;
+  _Bool current_state = 0;
   /* USER CODE END 1 */
-
-  /* MCU Configuration--------------------------------------------------------*/
-
+GPIO_InitStruct.Pull = GPIO_PULLDOWN;   /* MCU Configuration--------------------------------------------------------*/
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
 
@@ -67,15 +66,26 @@ int main(void)
   /* USER CODE BEGIN 2 */
   /* USER CODE END 2 */
 
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
   while (1)
-    { 
-        /* USER CODE BEGIN 3 */
+  {
+    /* USER CODE END WHILE */
 
-        HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
-        HAL_Delay(500);
+    /* USER CODE BEGIN 3 */
 
-        /* USER CODE END 3 */
+      current_state = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0);
+
+      if (current_state == 1 && previous_state == 0)
+      {
+          HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+          HAL_Delay(200); 
+      }
+
+      previous_state = current_state;
     }
+    
+  /* USER CODE END 3 */
 }
 
 /**
@@ -180,6 +190,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(B1_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PA0 */
+  GPIO_InitStruct.Pin = GPIO_PIN_0;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pin : LD2_Pin */
   GPIO_InitStruct.Pin = LD2_Pin;
