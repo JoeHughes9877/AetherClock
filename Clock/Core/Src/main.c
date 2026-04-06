@@ -102,13 +102,10 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    uart_write_byte('H');
-    uart_write_byte('e');
-    uart_write_byte('l');
-    uart_write_byte('l');
-    uart_write_byte('o');
+    uart_write("IT WORKS!");
+    uart_write_byte('\r');
     uart_write_byte('\n');
-    HAL_Delay(1000);
+    HAL_Delay(500);
   }
   /* USER CODE END 3 */
 }
