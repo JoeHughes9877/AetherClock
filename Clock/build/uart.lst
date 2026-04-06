@@ -1,4 +1,4 @@
-ARM GAS  /tmp/cc0hKcYr.s 			page 1
+ARM GAS  /tmp/ccYYv90g.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -19,12 +19,107 @@ ARM GAS  /tmp/cc0hKcYr.s 			page 1
   16              		.text
   17              	.Ltext0:
   18              		.cfi_sections	.debug_frame
-  19              		.file 1 "Core/Src/uart.c"
-  20              	.Letext0:
-ARM GAS  /tmp/cc0hKcYr.s 			page 2
+  19              		.file 1 "Core/Drivers/uart.c"
+  20              		.section	.text.uart_init,"ax",%progbits
+  21              		.align	1
+  22              		.global	uart_init
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	uart_init:
+  28              	.LFB134:
+   1:Core/Drivers/uart.c **** #include "uart.h"
+   2:Core/Drivers/uart.c **** #include "uart_stm32f466.h"
+   3:Core/Drivers/uart.c **** 
+   4:Core/Drivers/uart.c **** void uart_init(void) {
+  29              		.loc 1 4 22 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33 0000 08B5     		push	{r3, lr}
+  34              	.LCFI0:
+  35              		.cfi_def_cfa_offset 8
+  36              		.cfi_offset 3, -8
+  37              		.cfi_offset 14, -4
+   5:Core/Drivers/uart.c ****       platform_uart_init();
+  38              		.loc 1 5 7 view .LVU1
+  39 0002 FFF7FEFF 		bl	platform_uart_init
+  40              	.LVL0:
+   6:Core/Drivers/uart.c **** }
+  41              		.loc 1 6 1 is_stmt 0 view .LVU2
+  42 0006 08BD     		pop	{r3, pc}
+  43              		.cfi_endproc
+  44              	.LFE134:
+  46              		.section	.text.uart_write,"ax",%progbits
+  47              		.align	1
+  48              		.global	uart_write
+  49              		.syntax unified
+  50              		.thumb
+  51              		.thumb_func
+  53              	uart_write:
+  54              	.LVL1:
+ARM GAS  /tmp/ccYYv90g.s 			page 2
+
+
+  55              	.LFB135:
+   7:Core/Drivers/uart.c **** 
+   8:Core/Drivers/uart.c **** void uart_write(const char *str) {}
+  56              		.loc 1 8 34 is_stmt 1 view -0
+  57              		.cfi_startproc
+  58              		@ args = 0, pretend = 0, frame = 0
+  59              		@ frame_needed = 0, uses_anonymous_args = 0
+  60              		@ link register save eliminated.
+  61              		.loc 1 8 35 view .LVU4
+  62 0000 7047     		bx	lr
+  63              		.cfi_endproc
+  64              	.LFE135:
+  66              		.section	.text.uart_write_byte,"ax",%progbits
+  67              		.align	1
+  68              		.global	uart_write_byte
+  69              		.syntax unified
+  70              		.thumb
+  71              		.thumb_func
+  73              	uart_write_byte:
+  74              	.LVL2:
+  75              	.LFB136:
+   9:Core/Drivers/uart.c **** 
+  10:Core/Drivers/uart.c **** void uart_write_byte(uint8_t byte) {
+  76              		.loc 1 10 36 view -0
+  77              		.cfi_startproc
+  78              		@ args = 0, pretend = 0, frame = 0
+  79              		@ frame_needed = 0, uses_anonymous_args = 0
+  80              		.loc 1 10 36 is_stmt 0 view .LVU6
+  81 0000 08B5     		push	{r3, lr}
+  82              	.LCFI1:
+  83              		.cfi_def_cfa_offset 8
+  84              		.cfi_offset 3, -8
+  85              		.cfi_offset 14, -4
+  11:Core/Drivers/uart.c ****     platform_uart_write_byte(byte);
+  86              		.loc 1 11 5 is_stmt 1 view .LVU7
+  87 0002 FFF7FEFF 		bl	platform_uart_write_byte
+  88              	.LVL3:
+  12:Core/Drivers/uart.c **** }...
+  89              		.loc 1 12 1 is_stmt 0 view .LVU8
+  90 0006 08BD     		pop	{r3, pc}
+  91              		.cfi_endproc
+  92              	.LFE136:
+  94              		.text
+  95              	.Letext0:
+  96              		.file 2 "/usr/arm-none-eabi/include/machine/_default_types.h"
+  97              		.file 3 "/usr/arm-none-eabi/include/sys/_stdint.h"
+  98              		.file 4 "Core/Drivers/uart_stm32f466.h"
+ARM GAS  /tmp/ccYYv90g.s 			page 3
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 uart.c
+     /tmp/ccYYv90g.s:21     .text.uart_init:00000000 $t
+     /tmp/ccYYv90g.s:27     .text.uart_init:00000000 uart_init
+     /tmp/ccYYv90g.s:47     .text.uart_write:00000000 $t
+     /tmp/ccYYv90g.s:53     .text.uart_write:00000000 uart_write
+     /tmp/ccYYv90g.s:67     .text.uart_write_byte:00000000 $t
+     /tmp/ccYYv90g.s:73     .text.uart_write_byte:00000000 uart_write_byte
 
-NO UNDEFINED SYMBOLS
+UNDEFINED SYMBOLS
+platform_uart_init
+platform_uart_write_byte
