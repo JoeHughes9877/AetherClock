@@ -1,0 +1,101 @@
+ARM GAS  /tmp/ccD2rs5d.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"i2c_interface.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "Core/Drivers/i2c_interface.c"
+  20              		.section	.text.I2C_Interface_Write,"ax",%progbits
+  21              		.align	1
+  22              		.global	I2C_Interface_Write
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	I2C_Interface_Write:
+  28              	.LVL0:
+  29              	.LFB134:
+   1:Core/Drivers/i2c_interface.c **** #include "main.h"
+   2:Core/Drivers/i2c_interface.c **** #include "stm32f4xx_hal_i2c.h"
+   3:Core/Drivers/i2c_interface.c **** #include "i2c_interface.h"
+   4:Core/Drivers/i2c_interface.c **** 
+   5:Core/Drivers/i2c_interface.c **** extern I2C_HandleTypeDef hi2c1; 
+   6:Core/Drivers/i2c_interface.c **** 
+   7:Core/Drivers/i2c_interface.c **** void I2C_Interface_Write(uint8_t slave_addr, uint8_t data) {
+  30              		.loc 1 7 60 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 8
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		.loc 1 7 60 is_stmt 0 view .LVU1
+  35 0000 00B5     		push	{lr}
+  36              	.LCFI0:
+  37              		.cfi_def_cfa_offset 4
+  38              		.cfi_offset 14, -4
+  39 0002 85B0     		sub	sp, sp, #20
+  40              	.LCFI1:
+  41              		.cfi_def_cfa_offset 24
+  42 0004 8DF80F10 		strb	r1, [sp, #15]
+   8:Core/Drivers/i2c_interface.c ****     HAL_I2C_Master_Transmit(&hi2c1, (uint16_t)(slave_addr << 1), &data, 1, HAL_MAX_DELAY);
+  43              		.loc 1 8 5 is_stmt 1 view .LVU2
+  44 0008 4FF0FF33 		mov	r3, #-1
+  45 000c 0093     		str	r3, [sp]
+  46 000e 0123     		movs	r3, #1
+  47 0010 0DF10F02 		add	r2, sp, #15
+  48 0014 00FA03F1 		lsl	r1, r0, r3
+  49              	.LVL1:
+  50              		.loc 1 8 5 is_stmt 0 view .LVU3
+ARM GAS  /tmp/ccD2rs5d.s 			page 2
+
+
+  51 0018 0248     		ldr	r0, .L3
+  52              	.LVL2:
+  53              		.loc 1 8 5 view .LVU4
+  54 001a FFF7FEFF 		bl	HAL_I2C_Master_Transmit
+  55              	.LVL3:
+   9:Core/Drivers/i2c_interface.c **** }...
+  56              		.loc 1 9 1 view .LVU5
+  57 001e 05B0     		add	sp, sp, #20
+  58              	.LCFI2:
+  59              		.cfi_def_cfa_offset 4
+  60              		@ sp needed
+  61 0020 5DF804FB 		ldr	pc, [sp], #4
+  62              	.L4:
+  63              		.align	2
+  64              	.L3:
+  65 0024 00000000 		.word	hi2c1
+  66              		.cfi_endproc
+  67              	.LFE134:
+  69              		.text
+  70              	.Letext0:
+  71              		.file 2 "/usr/arm-none-eabi/include/machine/_default_types.h"
+  72              		.file 3 "/usr/arm-none-eabi/include/sys/_stdint.h"
+  73              		.file 4 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f446xx.h"
+  74              		.file 5 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+  75              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
+  76              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h"
+ARM GAS  /tmp/ccD2rs5d.s 			page 3
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 i2c_interface.c
+     /tmp/ccD2rs5d.s:21     .text.I2C_Interface_Write:00000000 $t
+     /tmp/ccD2rs5d.s:27     .text.I2C_Interface_Write:00000000 I2C_Interface_Write
+     /tmp/ccD2rs5d.s:65     .text.I2C_Interface_Write:00000024 $d
+
+UNDEFINED SYMBOLS
+HAL_I2C_Master_Transmit
+hi2c1

@@ -1,0 +1,424 @@
+ARM GAS  /tmp/ccDKC7Vd.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"lcd_hd44780.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "Core/Drivers/lcd_hd44780.c"
+  20              		.section	.text.LCD_Write_Nibble,"ax",%progbits
+  21              		.align	1
+  22              		.global	LCD_Write_Nibble
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	LCD_Write_Nibble:
+  28              	.LVL0:
+  29              	.LFB138:
+   1:Core/Drivers/lcd_hd44780.c **** #include "lcd_hd44780.h" 
+   2:Core/Drivers/lcd_hd44780.c **** #include "i2c_interface.h"
+   3:Core/Drivers/lcd_hd44780.c **** #include "main.h"
+   4:Core/Drivers/lcd_hd44780.c **** #include <stdint.h>
+   5:Core/Drivers/lcd_hd44780.c **** 
+   6:Core/Drivers/lcd_hd44780.c **** void LCD_Init() {
+   7:Core/Drivers/lcd_hd44780.c ****     HAL_Delay(50); //wake up 
+   8:Core/Drivers/lcd_hd44780.c **** 
+   9:Core/Drivers/lcd_hd44780.c ****     // Set 4-bit mode
+  10:Core/Drivers/lcd_hd44780.c ****     LCD_Write_Nibble(0x03, 0);
+  11:Core/Drivers/lcd_hd44780.c ****     HAL_Delay(5);
+  12:Core/Drivers/lcd_hd44780.c ****     LCD_Write_Nibble(0x03, 0);
+  13:Core/Drivers/lcd_hd44780.c ****     HAL_Delay(1);
+  14:Core/Drivers/lcd_hd44780.c ****     LCD_Write_Nibble(0x03, 0);
+  15:Core/Drivers/lcd_hd44780.c ****     HAL_Delay(1);
+  16:Core/Drivers/lcd_hd44780.c **** 
+  17:Core/Drivers/lcd_hd44780.c ****     LCD_Write_Nibble(0x02, 0); 
+  18:Core/Drivers/lcd_hd44780.c ****     HAL_Delay(1);
+  19:Core/Drivers/lcd_hd44780.c **** 
+  20:Core/Drivers/lcd_hd44780.c ****     // 4 bit mode in 2 lines 5x8 dots
+  21:Core/Drivers/lcd_hd44780.c ****     LCD_Send_Byte(0x28, 0);
+  22:Core/Drivers/lcd_hd44780.c ****     HAL_Delay(1);
+  23:Core/Drivers/lcd_hd44780.c ****     LCD_Send_Byte(0x0C, 0); 
+  24:Core/Drivers/lcd_hd44780.c ****     HAL_Delay(1);
+  25:Core/Drivers/lcd_hd44780.c ****     LCD_Send_Byte(0x06, 0); 
+  26:Core/Drivers/lcd_hd44780.c ****     HAL_Delay(1);
+  27:Core/Drivers/lcd_hd44780.c ****     
+  28:Core/Drivers/lcd_hd44780.c ****     LCD_Clear();
+  29:Core/Drivers/lcd_hd44780.c **** }
+ARM GAS  /tmp/ccDKC7Vd.s 			page 2
+
+
+  30:Core/Drivers/lcd_hd44780.c **** 
+  31:Core/Drivers/lcd_hd44780.c **** void LCD_Clear() {
+  32:Core/Drivers/lcd_hd44780.c ****     LCD_Send_Byte(0x01, 0); // Clear display command
+  33:Core/Drivers/lcd_hd44780.c ****     HAL_Delay(2); // Delay for clear command
+  34:Core/Drivers/lcd_hd44780.c **** }
+  35:Core/Drivers/lcd_hd44780.c **** 
+  36:Core/Drivers/lcd_hd44780.c **** void LCD_Send_String(const char *str) {
+  37:Core/Drivers/lcd_hd44780.c ****     while (*str) {
+  38:Core/Drivers/lcd_hd44780.c ****         LCD_Send_Byte(*str++, 1); 
+  39:Core/Drivers/lcd_hd44780.c ****     }
+  40:Core/Drivers/lcd_hd44780.c **** }
+  41:Core/Drivers/lcd_hd44780.c **** 
+  42:Core/Drivers/lcd_hd44780.c **** void LCD_Send_Byte(uint8_t byte, uint8_t rs) {
+  43:Core/Drivers/lcd_hd44780.c ****     LCD_Write_Nibble(byte >> 4, rs); // Send higher nibble
+  44:Core/Drivers/lcd_hd44780.c ****     LCD_Write_Nibble(byte & 0x0F, rs); // Send lower nibble
+  45:Core/Drivers/lcd_hd44780.c **** }
+  46:Core/Drivers/lcd_hd44780.c **** 
+  47:Core/Drivers/lcd_hd44780.c **** void LCD_Write_Nibble(uint8_t nibble, uint8_t rs) {
+  30              		.loc 1 47 51 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		.loc 1 47 51 is_stmt 0 view .LVU1
+  35 0000 10B5     		push	{r4, lr}
+  36              	.LCFI0:
+  37              		.cfi_def_cfa_offset 8
+  38              		.cfi_offset 4, -8
+  39              		.cfi_offset 14, -4
+  48:Core/Drivers/lcd_hd44780.c ****     uint8_t data = (nibble << 4) | rs | BACKLIGHT | PIN_EN;
+  40              		.loc 1 48 5 is_stmt 1 view .LVU2
+  41              		.loc 1 48 34 is_stmt 0 view .LVU3
+  42 0002 41EA0011 		orr	r1, r1, r0, lsl #4
+  43              	.LVL1:
+  44              		.loc 1 48 34 view .LVU4
+  45 0006 4CB2     		sxtb	r4, r1
+  46              		.loc 1 48 51 view .LVU5
+  47 0008 44F00C01 		orr	r1, r4, #12
+  48              	.LVL2:
+  49:Core/Drivers/lcd_hd44780.c ****     I2C_Interface_Write(LCD_ADDR, data);
+  49              		.loc 1 49 5 is_stmt 1 view .LVU6
+  50 000c C9B2     		uxtb	r1, r1
+  51              		.loc 1 49 5 is_stmt 0 view .LVU7
+  52 000e 2720     		movs	r0, #39
+  53              	.LVL3:
+  54              		.loc 1 49 5 view .LVU8
+  55 0010 FFF7FEFF 		bl	I2C_Interface_Write
+  56              	.LVL4:
+  50:Core/Drivers/lcd_hd44780.c ****     HAL_Delay(1); // Delay for pulse
+  57              		.loc 1 50 5 is_stmt 1 view .LVU9
+  58 0014 0120     		movs	r0, #1
+  59 0016 FFF7FEFF 		bl	HAL_Delay
+  60              	.LVL5:
+  51:Core/Drivers/lcd_hd44780.c **** 
+  52:Core/Drivers/lcd_hd44780.c ****     //turn off EN bit
+  53:Core/Drivers/lcd_hd44780.c ****     data &= ~PIN_EN; // Clear EN bit
+  61              		.loc 1 53 5 view .LVU10
+  62              		.loc 1 53 10 is_stmt 0 view .LVU11
+ARM GAS  /tmp/ccDKC7Vd.s 			page 3
+
+
+  63 001a 24F00401 		bic	r1, r4, #4
+  64 001e 41F00801 		orr	r1, r1, #8
+  65              	.LVL6:
+  54:Core/Drivers/lcd_hd44780.c ****     I2C_Interface_Write(LCD_ADDR, data);
+  66              		.loc 1 54 5 is_stmt 1 view .LVU12
+  67 0022 01F0FB01 		and	r1, r1, #251
+  68              	.LVL7:
+  69              		.loc 1 54 5 is_stmt 0 view .LVU13
+  70 0026 2720     		movs	r0, #39
+  71 0028 FFF7FEFF 		bl	I2C_Interface_Write
+  72              	.LVL8:
+  55:Core/Drivers/lcd_hd44780.c ****     HAL_Delay(1); // Delay for pulse
+  73              		.loc 1 55 5 is_stmt 1 view .LVU14
+  74 002c 0120     		movs	r0, #1
+  75 002e FFF7FEFF 		bl	HAL_Delay
+  76              	.LVL9:
+  56:Core/Drivers/lcd_hd44780.c **** }
+  77              		.loc 1 56 1 is_stmt 0 view .LVU15
+  78 0032 10BD     		pop	{r4, pc}
+  79              		.loc 1 56 1 view .LVU16
+  80              		.cfi_endproc
+  81              	.LFE138:
+  83              		.section	.text.LCD_Send_Byte,"ax",%progbits
+  84              		.align	1
+  85              		.global	LCD_Send_Byte
+  86              		.syntax unified
+  87              		.thumb
+  88              		.thumb_func
+  90              	LCD_Send_Byte:
+  91              	.LVL10:
+  92              	.LFB137:
+  42:Core/Drivers/lcd_hd44780.c ****     LCD_Write_Nibble(byte >> 4, rs); // Send higher nibble
+  93              		.loc 1 42 46 is_stmt 1 view -0
+  94              		.cfi_startproc
+  95              		@ args = 0, pretend = 0, frame = 0
+  96              		@ frame_needed = 0, uses_anonymous_args = 0
+  42:Core/Drivers/lcd_hd44780.c ****     LCD_Write_Nibble(byte >> 4, rs); // Send higher nibble
+  97              		.loc 1 42 46 is_stmt 0 view .LVU18
+  98 0000 38B5     		push	{r3, r4, r5, lr}
+  99              	.LCFI1:
+ 100              		.cfi_def_cfa_offset 16
+ 101              		.cfi_offset 3, -16
+ 102              		.cfi_offset 4, -12
+ 103              		.cfi_offset 5, -8
+ 104              		.cfi_offset 14, -4
+ 105 0002 0446     		mov	r4, r0
+ 106 0004 0D46     		mov	r5, r1
+  43:Core/Drivers/lcd_hd44780.c ****     LCD_Write_Nibble(byte & 0x0F, rs); // Send lower nibble
+ 107              		.loc 1 43 5 is_stmt 1 view .LVU19
+ 108 0006 0009     		lsrs	r0, r0, #4
+ 109              	.LVL11:
+  43:Core/Drivers/lcd_hd44780.c ****     LCD_Write_Nibble(byte & 0x0F, rs); // Send lower nibble
+ 110              		.loc 1 43 5 is_stmt 0 view .LVU20
+ 111 0008 FFF7FEFF 		bl	LCD_Write_Nibble
+ 112              	.LVL12:
+  44:Core/Drivers/lcd_hd44780.c **** }
+ 113              		.loc 1 44 5 is_stmt 1 view .LVU21
+ARM GAS  /tmp/ccDKC7Vd.s 			page 4
+
+
+ 114 000c 2946     		mov	r1, r5
+ 115 000e 04F00F00 		and	r0, r4, #15
+ 116 0012 FFF7FEFF 		bl	LCD_Write_Nibble
+ 117              	.LVL13:
+  45:Core/Drivers/lcd_hd44780.c **** 
+ 118              		.loc 1 45 1 is_stmt 0 view .LVU22
+ 119 0016 38BD     		pop	{r3, r4, r5, pc}
+  45:Core/Drivers/lcd_hd44780.c **** 
+ 120              		.loc 1 45 1 view .LVU23
+ 121              		.cfi_endproc
+ 122              	.LFE137:
+ 124              		.section	.text.LCD_Clear,"ax",%progbits
+ 125              		.align	1
+ 126              		.global	LCD_Clear
+ 127              		.syntax unified
+ 128              		.thumb
+ 129              		.thumb_func
+ 131              	LCD_Clear:
+ 132              	.LFB135:
+  31:Core/Drivers/lcd_hd44780.c ****     LCD_Send_Byte(0x01, 0); // Clear display command
+ 133              		.loc 1 31 18 is_stmt 1 view -0
+ 134              		.cfi_startproc
+ 135              		@ args = 0, pretend = 0, frame = 0
+ 136              		@ frame_needed = 0, uses_anonymous_args = 0
+ 137 0000 08B5     		push	{r3, lr}
+ 138              	.LCFI2:
+ 139              		.cfi_def_cfa_offset 8
+ 140              		.cfi_offset 3, -8
+ 141              		.cfi_offset 14, -4
+  32:Core/Drivers/lcd_hd44780.c ****     HAL_Delay(2); // Delay for clear command
+ 142              		.loc 1 32 5 view .LVU25
+ 143 0002 0021     		movs	r1, #0
+ 144 0004 0120     		movs	r0, #1
+ 145 0006 FFF7FEFF 		bl	LCD_Send_Byte
+ 146              	.LVL14:
+  33:Core/Drivers/lcd_hd44780.c **** }
+ 147              		.loc 1 33 5 view .LVU26
+ 148 000a 0220     		movs	r0, #2
+ 149 000c FFF7FEFF 		bl	HAL_Delay
+ 150              	.LVL15:
+  34:Core/Drivers/lcd_hd44780.c **** 
+ 151              		.loc 1 34 1 is_stmt 0 view .LVU27
+ 152 0010 08BD     		pop	{r3, pc}
+ 153              		.cfi_endproc
+ 154              	.LFE135:
+ 156              		.section	.text.LCD_Send_String,"ax",%progbits
+ 157              		.align	1
+ 158              		.global	LCD_Send_String
+ 159              		.syntax unified
+ 160              		.thumb
+ 161              		.thumb_func
+ 163              	LCD_Send_String:
+ 164              	.LVL16:
+ 165              	.LFB136:
+  36:Core/Drivers/lcd_hd44780.c ****     while (*str) {
+ 166              		.loc 1 36 39 is_stmt 1 view -0
+ 167              		.cfi_startproc
+ARM GAS  /tmp/ccDKC7Vd.s 			page 5
+
+
+ 168              		@ args = 0, pretend = 0, frame = 0
+ 169              		@ frame_needed = 0, uses_anonymous_args = 0
+  36:Core/Drivers/lcd_hd44780.c ****     while (*str) {
+ 170              		.loc 1 36 39 is_stmt 0 view .LVU29
+ 171 0000 10B5     		push	{r4, lr}
+ 172              	.LCFI3:
+ 173              		.cfi_def_cfa_offset 8
+ 174              		.cfi_offset 4, -8
+ 175              		.cfi_offset 14, -4
+ 176 0002 0446     		mov	r4, r0
+  37:Core/Drivers/lcd_hd44780.c ****         LCD_Send_Byte(*str++, 1); 
+ 177              		.loc 1 37 5 is_stmt 1 view .LVU30
+  37:Core/Drivers/lcd_hd44780.c ****         LCD_Send_Byte(*str++, 1); 
+ 178              		.loc 1 37 11 is_stmt 0 view .LVU31
+ 179 0004 03E0     		b	.L8
+ 180              	.LVL17:
+ 181              	.L9:
+  38:Core/Drivers/lcd_hd44780.c ****     }
+ 182              		.loc 1 38 9 is_stmt 1 view .LVU32
+  38:Core/Drivers/lcd_hd44780.c ****     }
+ 183              		.loc 1 38 27 is_stmt 0 view .LVU33
+ 184 0006 0134     		adds	r4, r4, #1
+ 185              	.LVL18:
+  38:Core/Drivers/lcd_hd44780.c ****     }
+ 186              		.loc 1 38 9 view .LVU34
+ 187 0008 0121     		movs	r1, #1
+ 188 000a FFF7FEFF 		bl	LCD_Send_Byte
+ 189              	.LVL19:
+ 190              	.L8:
+  37:Core/Drivers/lcd_hd44780.c ****         LCD_Send_Byte(*str++, 1); 
+ 191              		.loc 1 37 12 is_stmt 1 view .LVU35
+ 192 000e 2078     		ldrb	r0, [r4]	@ zero_extendqisi2
+ 193 0010 0028     		cmp	r0, #0
+ 194 0012 F8D1     		bne	.L9
+  40:Core/Drivers/lcd_hd44780.c **** 
+ 195              		.loc 1 40 1 is_stmt 0 view .LVU36
+ 196 0014 10BD     		pop	{r4, pc}
+  40:Core/Drivers/lcd_hd44780.c **** 
+ 197              		.loc 1 40 1 view .LVU37
+ 198              		.cfi_endproc
+ 199              	.LFE136:
+ 201              		.section	.text.LCD_Init,"ax",%progbits
+ 202              		.align	1
+ 203              		.global	LCD_Init
+ 204              		.syntax unified
+ 205              		.thumb
+ 206              		.thumb_func
+ 208              	LCD_Init:
+ 209              	.LFB134:
+   6:Core/Drivers/lcd_hd44780.c ****     HAL_Delay(50); //wake up 
+ 210              		.loc 1 6 17 is_stmt 1 view -0
+ 211              		.cfi_startproc
+ 212              		@ args = 0, pretend = 0, frame = 0
+ 213              		@ frame_needed = 0, uses_anonymous_args = 0
+ 214 0000 08B5     		push	{r3, lr}
+ 215              	.LCFI4:
+ 216              		.cfi_def_cfa_offset 8
+ARM GAS  /tmp/ccDKC7Vd.s 			page 6
+
+
+ 217              		.cfi_offset 3, -8
+ 218              		.cfi_offset 14, -4
+   7:Core/Drivers/lcd_hd44780.c **** 
+ 219              		.loc 1 7 5 view .LVU39
+ 220 0002 3220     		movs	r0, #50
+ 221 0004 FFF7FEFF 		bl	HAL_Delay
+ 222              	.LVL20:
+  10:Core/Drivers/lcd_hd44780.c ****     HAL_Delay(5);
+ 223              		.loc 1 10 5 view .LVU40
+ 224 0008 0021     		movs	r1, #0
+ 225 000a 0320     		movs	r0, #3
+ 226 000c FFF7FEFF 		bl	LCD_Write_Nibble
+ 227              	.LVL21:
+  11:Core/Drivers/lcd_hd44780.c ****     LCD_Write_Nibble(0x03, 0);
+ 228              		.loc 1 11 5 view .LVU41
+ 229 0010 0520     		movs	r0, #5
+ 230 0012 FFF7FEFF 		bl	HAL_Delay
+ 231              	.LVL22:
+  12:Core/Drivers/lcd_hd44780.c ****     HAL_Delay(1);
+ 232              		.loc 1 12 5 view .LVU42
+ 233 0016 0021     		movs	r1, #0
+ 234 0018 0320     		movs	r0, #3
+ 235 001a FFF7FEFF 		bl	LCD_Write_Nibble
+ 236              	.LVL23:
+  13:Core/Drivers/lcd_hd44780.c ****     LCD_Write_Nibble(0x03, 0);
+ 237              		.loc 1 13 5 view .LVU43
+ 238 001e 0120     		movs	r0, #1
+ 239 0020 FFF7FEFF 		bl	HAL_Delay
+ 240              	.LVL24:
+  14:Core/Drivers/lcd_hd44780.c ****     HAL_Delay(1);
+ 241              		.loc 1 14 5 view .LVU44
+ 242 0024 0021     		movs	r1, #0
+ 243 0026 0320     		movs	r0, #3
+ 244 0028 FFF7FEFF 		bl	LCD_Write_Nibble
+ 245              	.LVL25:
+  15:Core/Drivers/lcd_hd44780.c **** 
+ 246              		.loc 1 15 5 view .LVU45
+ 247 002c 0120     		movs	r0, #1
+ 248 002e FFF7FEFF 		bl	HAL_Delay
+ 249              	.LVL26:
+  17:Core/Drivers/lcd_hd44780.c ****     HAL_Delay(1);
+ 250              		.loc 1 17 5 view .LVU46
+ 251 0032 0021     		movs	r1, #0
+ 252 0034 0220     		movs	r0, #2
+ 253 0036 FFF7FEFF 		bl	LCD_Write_Nibble
+ 254              	.LVL27:
+  18:Core/Drivers/lcd_hd44780.c **** 
+ 255              		.loc 1 18 5 view .LVU47
+ 256 003a 0120     		movs	r0, #1
+ 257 003c FFF7FEFF 		bl	HAL_Delay
+ 258              	.LVL28:
+  21:Core/Drivers/lcd_hd44780.c ****     HAL_Delay(1);
+ 259              		.loc 1 21 5 view .LVU48
+ 260 0040 0021     		movs	r1, #0
+ 261 0042 2820     		movs	r0, #40
+ 262 0044 FFF7FEFF 		bl	LCD_Send_Byte
+ 263              	.LVL29:
+ARM GAS  /tmp/ccDKC7Vd.s 			page 7
+
+
+  22:Core/Drivers/lcd_hd44780.c ****     LCD_Send_Byte(0x0C, 0); 
+ 264              		.loc 1 22 5 view .LVU49
+ 265 0048 0120     		movs	r0, #1
+ 266 004a FFF7FEFF 		bl	HAL_Delay
+ 267              	.LVL30:
+  23:Core/Drivers/lcd_hd44780.c ****     HAL_Delay(1);
+ 268              		.loc 1 23 5 view .LVU50
+ 269 004e 0021     		movs	r1, #0
+ 270 0050 0C20     		movs	r0, #12
+ 271 0052 FFF7FEFF 		bl	LCD_Send_Byte
+ 272              	.LVL31:
+  24:Core/Drivers/lcd_hd44780.c ****     LCD_Send_Byte(0x06, 0); 
+ 273              		.loc 1 24 5 view .LVU51
+ 274 0056 0120     		movs	r0, #1
+ 275 0058 FFF7FEFF 		bl	HAL_Delay
+ 276              	.LVL32:
+  25:Core/Drivers/lcd_hd44780.c ****     HAL_Delay(1);
+ 277              		.loc 1 25 5 view .LVU52
+ 278 005c 0021     		movs	r1, #0
+ 279 005e 0620     		movs	r0, #6
+ 280 0060 FFF7FEFF 		bl	LCD_Send_Byte
+ 281              	.LVL33:
+  26:Core/Drivers/lcd_hd44780.c ****     
+ 282              		.loc 1 26 5 view .LVU53
+ 283 0064 0120     		movs	r0, #1
+ 284 0066 FFF7FEFF 		bl	HAL_Delay
+ 285              	.LVL34:
+  28:Core/Drivers/lcd_hd44780.c **** }
+ 286              		.loc 1 28 5 view .LVU54
+ 287 006a FFF7FEFF 		bl	LCD_Clear
+ 288              	.LVL35:
+  29:Core/Drivers/lcd_hd44780.c **** 
+ 289              		.loc 1 29 1 is_stmt 0 view .LVU55
+ 290 006e 08BD     		pop	{r3, pc}
+ 291              		.cfi_endproc
+ 292              	.LFE134:
+ 294              		.text
+ 295              	.Letext0:
+ 296              		.file 2 "/usr/arm-none-eabi/include/machine/_default_types.h"
+ 297              		.file 3 "/usr/arm-none-eabi/include/sys/_stdint.h"
+ 298              		.file 4 "Core/Drivers/i2c_interface.h"
+ 299              		.file 5 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h"
+ARM GAS  /tmp/ccDKC7Vd.s 			page 8
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 lcd_hd44780.c
+     /tmp/ccDKC7Vd.s:21     .text.LCD_Write_Nibble:00000000 $t
+     /tmp/ccDKC7Vd.s:27     .text.LCD_Write_Nibble:00000000 LCD_Write_Nibble
+     /tmp/ccDKC7Vd.s:84     .text.LCD_Send_Byte:00000000 $t
+     /tmp/ccDKC7Vd.s:90     .text.LCD_Send_Byte:00000000 LCD_Send_Byte
+     /tmp/ccDKC7Vd.s:125    .text.LCD_Clear:00000000 $t
+     /tmp/ccDKC7Vd.s:131    .text.LCD_Clear:00000000 LCD_Clear
+     /tmp/ccDKC7Vd.s:157    .text.LCD_Send_String:00000000 $t
+     /tmp/ccDKC7Vd.s:163    .text.LCD_Send_String:00000000 LCD_Send_String
+     /tmp/ccDKC7Vd.s:202    .text.LCD_Init:00000000 $t
+     /tmp/ccDKC7Vd.s:208    .text.LCD_Init:00000000 LCD_Init
+
+UNDEFINED SYMBOLS
+I2C_Interface_Write
+HAL_Delay
