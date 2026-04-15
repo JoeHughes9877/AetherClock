@@ -1,0 +1,354 @@
+ARM GAS  /tmp/cciuhucW.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"button.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "Core/Drivers/button.c"
+  20              		.section	.text.increaseButtonPressed,"ax",%progbits
+  21              		.align	1
+  22              		.global	increaseButtonPressed
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	increaseButtonPressed:
+  28              	.LFB134:
+   1:Core/Drivers/button.c **** #include "button.h"
+   2:Core/Drivers/button.c **** #include "stm32f4xx_hal.h"
+   3:Core/Drivers/button.c **** #include "main.h"
+   4:Core/Drivers/button.c **** 
+   5:Core/Drivers/button.c **** extern RTC_HandleTypeDef hrtc; 
+   6:Core/Drivers/button.c **** extern void SetTime(RTC_TimeTypeDef *sTime, RTC_DateTypeDef *sDate);
+   7:Core/Drivers/button.c **** 
+   8:Core/Drivers/button.c **** static RTC_TimeTypeDef sTime;
+   9:Core/Drivers/button.c **** static RTC_DateTypeDef sDate;
+  10:Core/Drivers/button.c **** 
+  11:Core/Drivers/button.c **** void increaseButtonPressed() {
+  29              		.loc 1 11 30 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33 0000 38B5     		push	{r3, r4, r5, lr}
+  34              	.LCFI0:
+  35              		.cfi_def_cfa_offset 16
+  36              		.cfi_offset 3, -16
+  37              		.cfi_offset 4, -12
+  38              		.cfi_offset 5, -8
+  39              		.cfi_offset 14, -4
+  12:Core/Drivers/button.c ****     HAL_RTC_GetTime(&hrtc, &sTime, RTC_FORMAT_BIN);
+  40              		.loc 1 12 5 view .LVU1
+  41 0002 144C     		ldr	r4, .L4
+  42 0004 144D     		ldr	r5, .L4+4
+  43 0006 0022     		movs	r2, #0
+  44 0008 2146     		mov	r1, r4
+  45 000a 2846     		mov	r0, r5
+  46 000c FFF7FEFF 		bl	HAL_RTC_GetTime
+ARM GAS  /tmp/cciuhucW.s 			page 2
+
+
+  47              	.LVL0:
+  13:Core/Drivers/button.c ****     HAL_RTC_GetDate(&hrtc, &sDate, RTC_FORMAT_BIN); 
+  48              		.loc 1 13 5 view .LVU2
+  49 0010 0022     		movs	r2, #0
+  50 0012 1249     		ldr	r1, .L4+8
+  51 0014 2846     		mov	r0, r5
+  52 0016 FFF7FEFF 		bl	HAL_RTC_GetDate
+  53              	.LVL1:
+  14:Core/Drivers/button.c **** 
+  15:Core/Drivers/button.c ****     if (++sTime.Minutes >= 60) {
+  54              		.loc 1 15 5 view .LVU3
+  55              		.loc 1 15 16 is_stmt 0 view .LVU4
+  56 001a 6378     		ldrb	r3, [r4, #1]	@ zero_extendqisi2
+  57              		.loc 1 15 9 view .LVU5
+  58 001c 0133     		adds	r3, r3, #1
+  59 001e DBB2     		uxtb	r3, r3
+  60              		.loc 1 15 8 view .LVU6
+  61 0020 6370     		strb	r3, [r4, #1]
+  62 0022 3B2B     		cmp	r3, #59
+  63 0024 0FD9     		bls	.L2
+  16:Core/Drivers/button.c ****         sTime.Minutes = 0;
+  64              		.loc 1 16 9 is_stmt 1 view .LVU7
+  65              		.loc 1 16 23 is_stmt 0 view .LVU8
+  66 0026 0023     		movs	r3, #0
+  67 0028 6370     		strb	r3, [r4, #1]
+  17:Core/Drivers/button.c ****         sTime.Hours = (sTime.Hours + 1) % 24;
+  68              		.loc 1 17 9 is_stmt 1 view .LVU9
+  69              		.loc 1 17 29 is_stmt 0 view .LVU10
+  70 002a 2278     		ldrb	r2, [r4]	@ zero_extendqisi2
+  71              		.loc 1 17 36 view .LVU11
+  72 002c 0132     		adds	r2, r2, #1
+  73              		.loc 1 17 41 view .LVU12
+  74 002e A3F15533 		sub	r3, r3, #1431655765
+  75 0032 03F10043 		add	r3, r3, #-2147483648
+  76 0036 83FB0203 		smull	r0, r3, r3, r2
+  77 003a 9B10     		asrs	r3, r3, #2
+  78 003c 03EB4303 		add	r3, r3, r3, lsl #1
+  79 0040 D800     		lsls	r0, r3, #3
+  80 0042 131A     		subs	r3, r2, r0
+  81              		.loc 1 17 21 view .LVU13
+  82 0044 2370     		strb	r3, [r4]
+  83              	.L2:
+  18:Core/Drivers/button.c ****     }
+  19:Core/Drivers/button.c ****     sTime.Seconds = 0;
+  84              		.loc 1 19 5 is_stmt 1 view .LVU14
+  85              		.loc 1 19 19 is_stmt 0 view .LVU15
+  86 0046 0348     		ldr	r0, .L4
+  87 0048 0023     		movs	r3, #0
+  88 004a 8370     		strb	r3, [r0, #2]
+  20:Core/Drivers/button.c ****     SetTime(&sTime, &sDate);
+  89              		.loc 1 20 5 is_stmt 1 view .LVU16
+  90 004c 0349     		ldr	r1, .L4+8
+  91 004e FFF7FEFF 		bl	SetTime
+  92              	.LVL2:
+  21:Core/Drivers/button.c **** }
+  93              		.loc 1 21 1 is_stmt 0 view .LVU17
+  94 0052 38BD     		pop	{r3, r4, r5, pc}
+ARM GAS  /tmp/cciuhucW.s 			page 3
+
+
+  95              	.L5:
+  96              		.align	2
+  97              	.L4:
+  98 0054 00000000 		.word	sTime
+  99 0058 00000000 		.word	hrtc
+ 100 005c 00000000 		.word	sDate
+ 101              		.cfi_endproc
+ 102              	.LFE134:
+ 104              		.section	.text.decreaseButtonPressed,"ax",%progbits
+ 105              		.align	1
+ 106              		.global	decreaseButtonPressed
+ 107              		.syntax unified
+ 108              		.thumb
+ 109              		.thumb_func
+ 111              	decreaseButtonPressed:
+ 112              	.LFB135:
+  22:Core/Drivers/button.c **** 
+  23:Core/Drivers/button.c **** void decreaseButtonPressed() {
+ 113              		.loc 1 23 30 is_stmt 1 view -0
+ 114              		.cfi_startproc
+ 115              		@ args = 0, pretend = 0, frame = 0
+ 116              		@ frame_needed = 0, uses_anonymous_args = 0
+ 117 0000 38B5     		push	{r3, r4, r5, lr}
+ 118              	.LCFI1:
+ 119              		.cfi_def_cfa_offset 16
+ 120              		.cfi_offset 3, -16
+ 121              		.cfi_offset 4, -12
+ 122              		.cfi_offset 5, -8
+ 123              		.cfi_offset 14, -4
+  24:Core/Drivers/button.c ****     HAL_RTC_GetTime(&hrtc, &sTime, RTC_FORMAT_BIN);
+ 124              		.loc 1 24 5 view .LVU19
+ 125 0002 114C     		ldr	r4, .L12
+ 126 0004 114D     		ldr	r5, .L12+4
+ 127 0006 0022     		movs	r2, #0
+ 128 0008 2146     		mov	r1, r4
+ 129 000a 2846     		mov	r0, r5
+ 130 000c FFF7FEFF 		bl	HAL_RTC_GetTime
+ 131              	.LVL3:
+  25:Core/Drivers/button.c ****     HAL_RTC_GetDate(&hrtc, &sDate, RTC_FORMAT_BIN);
+ 132              		.loc 1 25 5 view .LVU20
+ 133 0010 0022     		movs	r2, #0
+ 134 0012 0F49     		ldr	r1, .L12+8
+ 135 0014 2846     		mov	r0, r5
+ 136 0016 FFF7FEFF 		bl	HAL_RTC_GetDate
+ 137              	.LVL4:
+  26:Core/Drivers/button.c **** 
+  27:Core/Drivers/button.c ****     if (sTime.Minutes == 0) {
+ 138              		.loc 1 27 5 view .LVU21
+ 139              		.loc 1 27 14 is_stmt 0 view .LVU22
+ 140 001a 6378     		ldrb	r3, [r4, #1]	@ zero_extendqisi2
+ 141              		.loc 1 27 8 view .LVU23
+ 142 001c 83B9     		cbnz	r3, .L7
+  28:Core/Drivers/button.c ****         sTime.Minutes = 59;
+ 143              		.loc 1 28 9 is_stmt 1 view .LVU24
+ 144              		.loc 1 28 23 is_stmt 0 view .LVU25
+ 145 001e 3B22     		movs	r2, #59
+ 146 0020 6270     		strb	r2, [r4, #1]
+ARM GAS  /tmp/cciuhucW.s 			page 4
+
+
+  29:Core/Drivers/button.c ****         sTime.Hours = (sTime.Hours == 0) ? 23 : sTime.Hours - 1;
+ 147              		.loc 1 29 9 is_stmt 1 view .LVU26
+ 148              		.loc 1 29 29 is_stmt 0 view .LVU27
+ 149 0022 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
+ 150              		.loc 1 29 21 view .LVU28
+ 151 0024 53B1     		cbz	r3, .L10
+ 152              		.loc 1 29 21 discriminator 1 view .LVU29
+ 153 0026 013B     		subs	r3, r3, #1
+ 154 0028 DBB2     		uxtb	r3, r3
+ 155              	.L8:
+ 156              		.loc 1 29 21 discriminator 4 view .LVU30
+ 157 002a 074A     		ldr	r2, .L12
+ 158 002c 1370     		strb	r3, [r2]
+ 159              	.L9:
+  30:Core/Drivers/button.c ****     } else {
+  31:Core/Drivers/button.c ****         sTime.Minutes--;
+  32:Core/Drivers/button.c ****     }
+  33:Core/Drivers/button.c ****     sTime.Seconds = 0;
+ 160              		.loc 1 33 5 is_stmt 1 view .LVU31
+ 161              		.loc 1 33 19 is_stmt 0 view .LVU32
+ 162 002e 0648     		ldr	r0, .L12
+ 163 0030 0023     		movs	r3, #0
+ 164 0032 8370     		strb	r3, [r0, #2]
+  34:Core/Drivers/button.c ****     SetTime(&sTime, &sDate);
+ 165              		.loc 1 34 5 is_stmt 1 view .LVU33
+ 166 0034 0649     		ldr	r1, .L12+8
+ 167 0036 FFF7FEFF 		bl	SetTime
+ 168              	.LVL5:
+  35:Core/Drivers/button.c **** }
+ 169              		.loc 1 35 1 is_stmt 0 view .LVU34
+ 170 003a 38BD     		pop	{r3, r4, r5, pc}
+ 171              	.L10:
+  29:Core/Drivers/button.c ****     } else {
+ 172              		.loc 1 29 21 discriminator 2 view .LVU35
+ 173 003c 1723     		movs	r3, #23
+ 174 003e F4E7     		b	.L8
+ 175              	.L7:
+  31:Core/Drivers/button.c ****     }
+ 176              		.loc 1 31 9 is_stmt 1 view .LVU36
+  31:Core/Drivers/button.c ****     }
+ 177              		.loc 1 31 22 is_stmt 0 view .LVU37
+ 178 0040 013B     		subs	r3, r3, #1
+ 179 0042 014A     		ldr	r2, .L12
+ 180 0044 5370     		strb	r3, [r2, #1]
+ 181 0046 F2E7     		b	.L9
+ 182              	.L13:
+ 183              		.align	2
+ 184              	.L12:
+ 185 0048 00000000 		.word	sTime
+ 186 004c 00000000 		.word	hrtc
+ 187 0050 00000000 		.word	sDate
+ 188              		.cfi_endproc
+ 189              	.LFE135:
+ 191              		.section	.text.Button_Scan,"ax",%progbits
+ 192              		.align	1
+ 193              		.global	Button_Scan
+ 194              		.syntax unified
+ARM GAS  /tmp/cciuhucW.s 			page 5
+
+
+ 195              		.thumb
+ 196              		.thumb_func
+ 198              	Button_Scan:
+ 199              	.LFB136:
+  36:Core/Drivers/button.c **** 
+  37:Core/Drivers/button.c **** void Button_Scan() {
+ 200              		.loc 1 37 20 is_stmt 1 view -0
+ 201              		.cfi_startproc
+ 202              		@ args = 0, pretend = 0, frame = 0
+ 203              		@ frame_needed = 0, uses_anonymous_args = 0
+ 204 0000 08B5     		push	{r3, lr}
+ 205              	.LCFI2:
+ 206              		.cfi_def_cfa_offset 8
+ 207              		.cfi_offset 3, -8
+ 208              		.cfi_offset 14, -4
+  38:Core/Drivers/button.c ****     if (HAL_GPIO_ReadPin(GPIOB, increaseButton_Pin) == GPIO_PIN_SET) {
+ 209              		.loc 1 38 5 view .LVU39
+ 210              		.loc 1 38 9 is_stmt 0 view .LVU40
+ 211 0002 2021     		movs	r1, #32
+ 212 0004 0848     		ldr	r0, .L20
+ 213 0006 FFF7FEFF 		bl	HAL_GPIO_ReadPin
+ 214              	.LVL6:
+ 215              		.loc 1 38 8 discriminator 1 view .LVU41
+ 216 000a 0128     		cmp	r0, #1
+ 217 000c 06D0     		beq	.L18
+ 218              	.L15:
+  39:Core/Drivers/button.c ****         increaseButtonPressed();
+  40:Core/Drivers/button.c ****     }
+  41:Core/Drivers/button.c ****     if (HAL_GPIO_ReadPin(GPIOB, decreaseButton_Pin) == GPIO_PIN_SET) {
+ 219              		.loc 1 41 5 is_stmt 1 view .LVU42
+ 220              		.loc 1 41 9 is_stmt 0 view .LVU43
+ 221 000e 1021     		movs	r1, #16
+ 222 0010 0548     		ldr	r0, .L20
+ 223 0012 FFF7FEFF 		bl	HAL_GPIO_ReadPin
+ 224              	.LVL7:
+ 225              		.loc 1 41 8 discriminator 1 view .LVU44
+ 226 0016 0128     		cmp	r0, #1
+ 227 0018 03D0     		beq	.L19
+ 228              	.L14:
+  42:Core/Drivers/button.c ****         decreaseButtonPressed();
+  43:Core/Drivers/button.c ****     }
+  44:Core/Drivers/button.c **** }   ...
+ 229              		.loc 1 44 1 view .LVU45
+ 230 001a 08BD     		pop	{r3, pc}
+ 231              	.L18:
+  39:Core/Drivers/button.c ****         increaseButtonPressed();
+ 232              		.loc 1 39 9 is_stmt 1 view .LVU46
+ 233 001c FFF7FEFF 		bl	increaseButtonPressed
+ 234              	.LVL8:
+ 235 0020 F5E7     		b	.L15
+ 236              	.L19:
+  42:Core/Drivers/button.c ****         decreaseButtonPressed();
+ 237              		.loc 1 42 9 view .LVU47
+ 238 0022 FFF7FEFF 		bl	decreaseButtonPressed
+ 239              	.LVL9:
+ 240              		.loc 1 44 1 is_stmt 0 view .LVU48
+ 241 0026 F8E7     		b	.L14
+ARM GAS  /tmp/cciuhucW.s 			page 6
+
+
+ 242              	.L21:
+ 243              		.align	2
+ 244              	.L20:
+ 245 0028 00040240 		.word	1073873920
+ 246              		.cfi_endproc
+ 247              	.LFE136:
+ 249              		.section	.bss.sDate,"aw",%nobits
+ 250              		.align	2
+ 253              	sDate:
+ 254 0000 00000000 		.space	4
+ 255              		.section	.bss.sTime,"aw",%nobits
+ 256              		.align	2
+ 259              	sTime:
+ 260 0000 00000000 		.space	20
+ 260      00000000 
+ 260      00000000 
+ 260      00000000 
+ 260      00000000 
+ 261              		.text
+ 262              	.Letext0:
+ 263              		.file 2 "/usr/arm-none-eabi/include/machine/_default_types.h"
+ 264              		.file 3 "/usr/arm-none-eabi/include/sys/_stdint.h"
+ 265              		.file 4 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f446xx.h"
+ 266              		.file 5 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+ 267              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h"
+ 268              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rtc.h"
+ARM GAS  /tmp/cciuhucW.s 			page 7
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 button.c
+     /tmp/cciuhucW.s:21     .text.increaseButtonPressed:00000000 $t
+     /tmp/cciuhucW.s:27     .text.increaseButtonPressed:00000000 increaseButtonPressed
+     /tmp/cciuhucW.s:98     .text.increaseButtonPressed:00000054 $d
+     /tmp/cciuhucW.s:259    .bss.sTime:00000000 sTime
+     /tmp/cciuhucW.s:253    .bss.sDate:00000000 sDate
+     /tmp/cciuhucW.s:105    .text.decreaseButtonPressed:00000000 $t
+     /tmp/cciuhucW.s:111    .text.decreaseButtonPressed:00000000 decreaseButtonPressed
+     /tmp/cciuhucW.s:185    .text.decreaseButtonPressed:00000048 $d
+     /tmp/cciuhucW.s:192    .text.Button_Scan:00000000 $t
+     /tmp/cciuhucW.s:198    .text.Button_Scan:00000000 Button_Scan
+     /tmp/cciuhucW.s:245    .text.Button_Scan:00000028 $d
+     /tmp/cciuhucW.s:250    .bss.sDate:00000000 $d
+     /tmp/cciuhucW.s:256    .bss.sTime:00000000 $d
+
+UNDEFINED SYMBOLS
+HAL_RTC_GetTime
+HAL_RTC_GetDate
+SetTime
+hrtc
+HAL_GPIO_ReadPin

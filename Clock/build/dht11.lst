@@ -1,0 +1,620 @@
+ARM GAS  /tmp/cchYQSPX.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"dht11.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "Core/Drivers/dht11.c"
+  20              		.section	.text.DHT_init,"ax",%progbits
+  21              		.align	1
+  22              		.global	DHT_init
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	DHT_init:
+  28              	.LFB134:
+   1:Core/Drivers/dht11.c **** #include "dht11.h"
+   2:Core/Drivers/dht11.c **** #include <string.h>
+   3:Core/Drivers/dht11.c **** 
+   4:Core/Drivers/dht11.c **** uint8_t dht11_data[5];
+   5:Core/Drivers/dht11.c **** int8_t bit_index = 0;
+   6:Core/Drivers/dht11.c **** DHT_State dht_state = DHT_IDLE;
+   7:Core/Drivers/dht11.c **** 
+   8:Core/Drivers/dht11.c **** extern TIM_HandleTypeDef htim3;
+   9:Core/Drivers/dht11.c **** 
+  10:Core/Drivers/dht11.c **** uint16_t dht_humidity = 0;
+  11:Core/Drivers/dht11.c **** uint16_t dht_temperature = 0;
+  12:Core/Drivers/dht11.c **** 
+  13:Core/Drivers/dht11.c **** void DHT_init(void) {
+  29              		.loc 1 13 21 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33 0000 08B5     		push	{r3, lr}
+  34              	.LCFI0:
+  35              		.cfi_def_cfa_offset 8
+  36              		.cfi_offset 3, -8
+  37              		.cfi_offset 14, -4
+  14:Core/Drivers/dht11.c ****     HAL_TIM_Base_Start_IT(&htim3);
+  38              		.loc 1 14 5 view .LVU1
+  39 0002 0448     		ldr	r0, .L3
+  40 0004 FFF7FEFF 		bl	HAL_TIM_Base_Start_IT
+  41              	.LVL0:
+  15:Core/Drivers/dht11.c ****     HAL_Delay(1000); // Give sensor time to stabilize
+  42              		.loc 1 15 5 view .LVU2
+  43 0008 4FF47A70 		mov	r0, #1000
+ARM GAS  /tmp/cchYQSPX.s 			page 2
+
+
+  44 000c FFF7FEFF 		bl	HAL_Delay
+  45              	.LVL1:
+  16:Core/Drivers/dht11.c **** }
+  46              		.loc 1 16 1 is_stmt 0 view .LVU3
+  47 0010 08BD     		pop	{r3, pc}
+  48              	.L4:
+  49 0012 00BF     		.align	2
+  50              	.L3:
+  51 0014 00000000 		.word	htim3
+  52              		.cfi_endproc
+  53              	.LFE134:
+  55              		.section	.text.DHT_Start,"ax",%progbits
+  56              		.align	1
+  57              		.global	DHT_Start
+  58              		.syntax unified
+  59              		.thumb
+  60              		.thumb_func
+  62              	DHT_Start:
+  63              	.LFB135:
+  17:Core/Drivers/dht11.c **** 
+  18:Core/Drivers/dht11.c **** void DHT_Start(void) {
+  64              		.loc 1 18 22 is_stmt 1 view -0
+  65              		.cfi_startproc
+  66              		@ args = 0, pretend = 0, frame = 24
+  67              		@ frame_needed = 0, uses_anonymous_args = 0
+  68 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+  69              	.LCFI1:
+  70              		.cfi_def_cfa_offset 20
+  71              		.cfi_offset 4, -20
+  72              		.cfi_offset 5, -16
+  73              		.cfi_offset 6, -12
+  74              		.cfi_offset 7, -8
+  75              		.cfi_offset 14, -4
+  76 0002 87B0     		sub	sp, sp, #28
+  77              	.LCFI2:
+  78              		.cfi_def_cfa_offset 48
+  19:Core/Drivers/dht11.c ****     GPIO_InitTypeDef GPIO_InitStruct = {0};
+  79              		.loc 1 19 5 view .LVU5
+  80              		.loc 1 19 22 is_stmt 0 view .LVU6
+  81 0004 01A9     		add	r1, sp, #4
+  82 0006 0024     		movs	r4, #0
+  83 0008 0194     		str	r4, [sp, #4]
+  84 000a 4C60     		str	r4, [r1, #4]
+  85 000c 8C60     		str	r4, [r1, #8]
+  86 000e CC60     		str	r4, [r1, #12]
+  87 0010 0C61     		str	r4, [r1, #16]
+  20:Core/Drivers/dht11.c **** 
+  21:Core/Drivers/dht11.c ****     // 1. Output mode to pull the line down
+  22:Core/Drivers/dht11.c ****     GPIO_InitStruct.Pin = dht11_Pin;
+  88              		.loc 1 22 5 is_stmt 1 view .LVU7
+  89              		.loc 1 22 25 is_stmt 0 view .LVU8
+  90 0012 4026     		movs	r6, #64
+  91 0014 0196     		str	r6, [sp, #4]
+  23:Core/Drivers/dht11.c ****     GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  92              		.loc 1 23 5 is_stmt 1 view .LVU9
+  93              		.loc 1 23 26 is_stmt 0 view .LVU10
+  94 0016 0127     		movs	r7, #1
+ARM GAS  /tmp/cchYQSPX.s 			page 3
+
+
+  95 0018 0297     		str	r7, [sp, #8]
+  24:Core/Drivers/dht11.c ****     GPIO_InitStruct.Pull = GPIO_PULLUP;
+  96              		.loc 1 24 5 is_stmt 1 view .LVU11
+  97              		.loc 1 24 26 is_stmt 0 view .LVU12
+  98 001a 0397     		str	r7, [sp, #12]
+  25:Core/Drivers/dht11.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  99              		.loc 1 25 5 is_stmt 1 view .LVU13
+  26:Core/Drivers/dht11.c ****     HAL_GPIO_Init(dht11_GPIO_Port, &GPIO_InitStruct);
+ 100              		.loc 1 26 5 view .LVU14
+ 101 001c 134D     		ldr	r5, .L9
+ 102 001e 2846     		mov	r0, r5
+ 103 0020 FFF7FEFF 		bl	HAL_GPIO_Init
+ 104              	.LVL2:
+  27:Core/Drivers/dht11.c **** 
+  28:Core/Drivers/dht11.c ****     // 2. DHT11 Start Signal: Pull low for 18ms
+  29:Core/Drivers/dht11.c ****     HAL_GPIO_WritePin(dht11_GPIO_Port, dht11_Pin, GPIO_PIN_RESET);
+ 105              		.loc 1 29 5 view .LVU15
+ 106 0024 2246     		mov	r2, r4
+ 107 0026 3146     		mov	r1, r6
+ 108 0028 2846     		mov	r0, r5
+ 109 002a FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 110              	.LVL3:
+  30:Core/Drivers/dht11.c ****     HAL_Delay(18);
+ 111              		.loc 1 30 5 view .LVU16
+ 112 002e 1220     		movs	r0, #18
+ 113 0030 FFF7FEFF 		bl	HAL_Delay
+ 114              	.LVL4:
+  31:Core/Drivers/dht11.c **** 
+  32:Core/Drivers/dht11.c ****     // 3. Release the line (pull high) for 30us
+  33:Core/Drivers/dht11.c ****     HAL_GPIO_WritePin(dht11_GPIO_Port, dht11_Pin, GPIO_PIN_SET);
+ 115              		.loc 1 33 5 view .LVU17
+ 116 0034 3A46     		mov	r2, r7
+ 117 0036 3146     		mov	r1, r6
+ 118 0038 2846     		mov	r0, r5
+ 119 003a FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 120              	.LVL5:
+  34:Core/Drivers/dht11.c ****     for(volatile int i=0; i<100; i++); // Short microsecond delay
+ 121              		.loc 1 34 5 view .LVU18
+ 122              	.LBB2:
+ 123              		.loc 1 34 9 view .LVU19
+ 124              		.loc 1 34 22 is_stmt 0 view .LVU20
+ 125 003e 0094     		str	r4, [sp]
+ 126              		.loc 1 34 5 view .LVU21
+ 127 0040 02E0     		b	.L6
+ 128              	.L7:
+ 129              		.loc 1 34 35 is_stmt 1 discriminator 3 view .LVU22
+ 130 0042 009B     		ldr	r3, [sp]
+ 131 0044 0133     		adds	r3, r3, #1
+ 132 0046 0093     		str	r3, [sp]
+ 133              	.L6:
+ 134              		.loc 1 34 28 discriminator 1 view .LVU23
+ 135 0048 009B     		ldr	r3, [sp]
+ 136 004a 632B     		cmp	r3, #99
+ 137 004c F9DD     		ble	.L7
+ 138              	.LBE2:
+  35:Core/Drivers/dht11.c **** 
+  36:Core/Drivers/dht11.c ****     // 4. Switch to Input Capture (Alternate Function)
+ARM GAS  /tmp/cchYQSPX.s 			page 4
+
+
+  37:Core/Drivers/dht11.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 139              		.loc 1 37 5 view .LVU24
+ 140              		.loc 1 37 26 is_stmt 0 view .LVU25
+ 141 004e 0223     		movs	r3, #2
+ 142 0050 0293     		str	r3, [sp, #8]
+  38:Core/Drivers/dht11.c ****     GPIO_InitStruct.Pull = GPIO_PULLUP; 
+ 143              		.loc 1 38 5 is_stmt 1 view .LVU26
+ 144              		.loc 1 38 26 is_stmt 0 view .LVU27
+ 145 0052 0122     		movs	r2, #1
+ 146 0054 0392     		str	r2, [sp, #12]
+  39:Core/Drivers/dht11.c ****     GPIO_InitStruct.Alternate = GPIO_AF2_TIM3;
+ 147              		.loc 1 39 5 is_stmt 1 view .LVU28
+ 148              		.loc 1 39 31 is_stmt 0 view .LVU29
+ 149 0056 0593     		str	r3, [sp, #20]
+  40:Core/Drivers/dht11.c ****     HAL_GPIO_Init(dht11_GPIO_Port, &GPIO_InitStruct);
+ 150              		.loc 1 40 5 is_stmt 1 view .LVU30
+ 151 0058 01A9     		add	r1, sp, #4
+ 152 005a 0448     		ldr	r0, .L9
+ 153 005c FFF7FEFF 		bl	HAL_GPIO_Init
+ 154              	.LVL6:
+  41:Core/Drivers/dht11.c **** 
+  42:Core/Drivers/dht11.c ****     // 5. Enable the Input Capture interrupt
+  43:Core/Drivers/dht11.c ****     HAL_TIM_IC_Start_IT(&htim3, TIM_CHANNEL_1);
+ 155              		.loc 1 43 5 view .LVU31
+ 156 0060 0021     		movs	r1, #0
+ 157 0062 0348     		ldr	r0, .L9+4
+ 158 0064 FFF7FEFF 		bl	HAL_TIM_IC_Start_IT
+ 159              	.LVL7:
+  44:Core/Drivers/dht11.c **** }
+ 160              		.loc 1 44 1 is_stmt 0 view .LVU32
+ 161 0068 07B0     		add	sp, sp, #28
+ 162              	.LCFI3:
+ 163              		.cfi_def_cfa_offset 20
+ 164              		@ sp needed
+ 165 006a F0BD     		pop	{r4, r5, r6, r7, pc}
+ 166              	.L10:
+ 167              		.align	2
+ 168              	.L9:
+ 169 006c 00000240 		.word	1073872896
+ 170 0070 00000000 		.word	htim3
+ 171              		.cfi_endproc
+ 172              	.LFE135:
+ 174              		.section	.text.DHT_Read,"ax",%progbits
+ 175              		.align	1
+ 176              		.global	DHT_Read
+ 177              		.syntax unified
+ 178              		.thumb
+ 179              		.thumb_func
+ 181              	DHT_Read:
+ 182              	.LFB136:
+  45:Core/Drivers/dht11.c **** 
+  46:Core/Drivers/dht11.c **** void DHT_Read(void) {
+ 183              		.loc 1 46 21 is_stmt 1 view -0
+ 184              		.cfi_startproc
+ 185              		@ args = 0, pretend = 0, frame = 0
+ 186              		@ frame_needed = 0, uses_anonymous_args = 0
+ 187 0000 08B5     		push	{r3, lr}
+ARM GAS  /tmp/cchYQSPX.s 			page 5
+
+
+ 188              	.LCFI4:
+ 189              		.cfi_def_cfa_offset 8
+ 190              		.cfi_offset 3, -8
+ 191              		.cfi_offset 14, -4
+  47:Core/Drivers/dht11.c ****     // Start at -2 to ignore the sensor's response pulse (80us Low, 80us High)
+  48:Core/Drivers/dht11.c ****     bit_index = -2; 
+ 192              		.loc 1 48 5 view .LVU34
+ 193              		.loc 1 48 15 is_stmt 0 view .LVU35
+ 194 0002 064B     		ldr	r3, .L13
+ 195 0004 FE22     		movs	r2, #254
+ 196 0006 1A70     		strb	r2, [r3]
+  49:Core/Drivers/dht11.c ****     memset(dht11_data, 0, sizeof(dht11_data));
+ 197              		.loc 1 49 5 is_stmt 1 view .LVU36
+ 198 0008 054B     		ldr	r3, .L13+4
+ 199 000a 0022     		movs	r2, #0
+ 200 000c 1A60     		str	r2, [r3]
+ 201 000e 1A71     		strb	r2, [r3, #4]
+  50:Core/Drivers/dht11.c ****     dht_state = DHT_RECEIVE;
+ 202              		.loc 1 50 5 view .LVU37
+ 203              		.loc 1 50 15 is_stmt 0 view .LVU38
+ 204 0010 044B     		ldr	r3, .L13+8
+ 205 0012 0122     		movs	r2, #1
+ 206 0014 1A70     		strb	r2, [r3]
+  51:Core/Drivers/dht11.c ****     DHT_Start(); 
+ 207              		.loc 1 51 5 is_stmt 1 view .LVU39
+ 208 0016 FFF7FEFF 		bl	DHT_Start
+ 209              	.LVL8:
+  52:Core/Drivers/dht11.c **** }
+ 210              		.loc 1 52 1 is_stmt 0 view .LVU40
+ 211 001a 08BD     		pop	{r3, pc}
+ 212              	.L14:
+ 213              		.align	2
+ 214              	.L13:
+ 215 001c 00000000 		.word	bit_index
+ 216 0020 00000000 		.word	dht11_data
+ 217 0024 00000000 		.word	dht_state
+ 218              		.cfi_endproc
+ 219              	.LFE136:
+ 221              		.section	.text.DHT_Get_Results,"ax",%progbits
+ 222              		.align	1
+ 223              		.global	DHT_Get_Results
+ 224              		.syntax unified
+ 225              		.thumb
+ 226              		.thumb_func
+ 228              	DHT_Get_Results:
+ 229              	.LFB137:
+  53:Core/Drivers/dht11.c **** 
+  54:Core/Drivers/dht11.c **** void DHT_Get_Results(void) {
+ 230              		.loc 1 54 28 is_stmt 1 view -0
+ 231              		.cfi_startproc
+ 232              		@ args = 0, pretend = 0, frame = 0
+ 233              		@ frame_needed = 0, uses_anonymous_args = 0
+ 234 0000 00B5     		push	{lr}
+ 235              	.LCFI5:
+ 236              		.cfi_def_cfa_offset 4
+ 237              		.cfi_offset 14, -4
+  55:Core/Drivers/dht11.c ****     // Basic Checksum verification
+ARM GAS  /tmp/cchYQSPX.s 			page 6
+
+
+  56:Core/Drivers/dht11.c ****     uint8_t check = dht11_data[0] + dht11_data[1] + dht11_data[2] + dht11_data[3];
+ 238              		.loc 1 56 5 view .LVU42
+ 239              		.loc 1 56 31 is_stmt 0 view .LVU43
+ 240 0002 124A     		ldr	r2, .L19
+ 241 0004 1078     		ldrb	r0, [r2]	@ zero_extendqisi2
+ 242              		.loc 1 56 47 view .LVU44
+ 243 0006 92F801E0 		ldrb	lr, [r2, #1]	@ zero_extendqisi2
+ 244              		.loc 1 56 35 view .LVU45
+ 245 000a 00EB0E03 		add	r3, r0, lr
+ 246              		.loc 1 56 63 view .LVU46
+ 247 000e 9178     		ldrb	r1, [r2, #2]	@ zero_extendqisi2
+ 248              		.loc 1 56 51 view .LVU47
+ 249 0010 51FA83F3 		uxtab	r3, r1, r3
+ 250              		.loc 1 56 79 view .LVU48
+ 251 0014 92F803C0 		ldrb	ip, [r2, #3]	@ zero_extendqisi2
+ 252              		.loc 1 56 13 view .LVU49
+ 253 0018 5CFA83F3 		uxtab	r3, ip, r3
+ 254 001c DBB2     		uxtb	r3, r3
+ 255              	.LVL9:
+  57:Core/Drivers/dht11.c ****     if (check == dht11_data[4] && check > 0) {
+ 256              		.loc 1 57 5 is_stmt 1 view .LVU50
+ 257              		.loc 1 57 28 is_stmt 0 view .LVU51
+ 258 001e 1279     		ldrb	r2, [r2, #4]	@ zero_extendqisi2
+ 259              		.loc 1 57 8 view .LVU52
+ 260 0020 9A42     		cmp	r2, r3
+ 261 0022 01D0     		beq	.L18
+ 262              	.LVL10:
+ 263              	.L15:
+  58:Core/Drivers/dht11.c ****         // DHT11 sends Integral.Decimal. We multiply integral by 10 for your LCD logic
+  59:Core/Drivers/dht11.c ****         dht_humidity = (dht11_data[0] * 10) + dht11_data[1];
+  60:Core/Drivers/dht11.c ****         dht_temperature = (dht11_data[2] * 10) + dht11_data[3];
+  61:Core/Drivers/dht11.c ****     }
+  62:Core/Drivers/dht11.c **** }
+ 264              		.loc 1 62 1 view .LVU53
+ 265 0024 5DF804FB 		ldr	pc, [sp], #4
+ 266              	.LVL11:
+ 267              	.L18:
+  57:Core/Drivers/dht11.c ****     if (check == dht11_data[4] && check > 0) {
+ 268              		.loc 1 57 32 discriminator 1 view .LVU54
+ 269 0028 002B     		cmp	r3, #0
+ 270 002a FBD0     		beq	.L15
+  59:Core/Drivers/dht11.c ****         dht_temperature = (dht11_data[2] * 10) + dht11_data[3];
+ 271              		.loc 1 59 9 is_stmt 1 view .LVU55
+  59:Core/Drivers/dht11.c ****         dht_temperature = (dht11_data[2] * 10) + dht11_data[3];
+ 272              		.loc 1 59 45 is_stmt 0 view .LVU56
+ 273 002c 00EB8000 		add	r0, r0, r0, lsl #2
+ 274 0030 4300     		lsls	r3, r0, #1
+ 275              	.LVL12:
+  59:Core/Drivers/dht11.c ****         dht_temperature = (dht11_data[2] * 10) + dht11_data[3];
+ 276              		.loc 1 59 45 view .LVU57
+ 277 0032 9E44     		add	lr, lr, r3
+ 278              	.LVL13:
+  59:Core/Drivers/dht11.c ****         dht_temperature = (dht11_data[2] * 10) + dht11_data[3];
+ 279              		.loc 1 59 22 view .LVU58
+ 280 0034 064B     		ldr	r3, .L19+4
+ 281 0036 A3F800E0 		strh	lr, [r3]	@ movhi
+  60:Core/Drivers/dht11.c ****     }
+ARM GAS  /tmp/cchYQSPX.s 			page 7
+
+
+ 282              		.loc 1 60 9 is_stmt 1 view .LVU59
+  60:Core/Drivers/dht11.c ****     }
+ 283              		.loc 1 60 48 is_stmt 0 view .LVU60
+ 284 003a 01EB8101 		add	r1, r1, r1, lsl #2
+ 285              	.LVL14:
+  60:Core/Drivers/dht11.c ****     }
+ 286              		.loc 1 60 48 view .LVU61
+ 287 003e 4B00     		lsls	r3, r1, #1
+ 288 0040 9C44     		add	ip, ip, r3
+ 289              	.LVL15:
+  60:Core/Drivers/dht11.c ****     }
+ 290              		.loc 1 60 25 view .LVU62
+ 291 0042 044B     		ldr	r3, .L19+8
+ 292 0044 A3F800C0 		strh	ip, [r3]	@ movhi
+ 293              		.loc 1 62 1 view .LVU63
+ 294 0048 ECE7     		b	.L15
+ 295              	.L20:
+ 296 004a 00BF     		.align	2
+ 297              	.L19:
+ 298 004c 00000000 		.word	dht11_data
+ 299 0050 00000000 		.word	dht_humidity
+ 300 0054 00000000 		.word	dht_temperature
+ 301              		.cfi_endproc
+ 302              	.LFE137:
+ 304              		.section	.text.DHT_TIM_IC_CaptureCallback,"ax",%progbits
+ 305              		.align	1
+ 306              		.global	DHT_TIM_IC_CaptureCallback
+ 307              		.syntax unified
+ 308              		.thumb
+ 309              		.thumb_func
+ 311              	DHT_TIM_IC_CaptureCallback:
+ 312              	.LVL16:
+ 313              	.LFB138:
+  63:Core/Drivers/dht11.c **** 
+  64:Core/Drivers/dht11.c **** void DHT_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
+ 314              		.loc 1 64 58 is_stmt 1 view -0
+ 315              		.cfi_startproc
+ 316              		@ args = 0, pretend = 0, frame = 0
+ 317              		@ frame_needed = 0, uses_anonymous_args = 0
+  65:Core/Drivers/dht11.c ****     if (dht_state != DHT_RECEIVE) return;
+ 318              		.loc 1 65 5 view .LVU65
+ 319              		.loc 1 65 19 is_stmt 0 view .LVU66
+ 320 0000 194B     		ldr	r3, .L32
+ 321 0002 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 322              		.loc 1 65 8 view .LVU67
+ 323 0004 012B     		cmp	r3, #1
+ 324 0006 00D0     		beq	.L29
+ 325 0008 7047     		bx	lr
+ 326              	.L29:
+  64:Core/Drivers/dht11.c ****     if (dht_state != DHT_RECEIVE) return;
+ 327              		.loc 1 64 58 view .LVU68
+ 328 000a 10B5     		push	{r4, lr}
+ 329              	.LCFI6:
+ 330              		.cfi_def_cfa_offset 8
+ 331              		.cfi_offset 4, -8
+ 332              		.cfi_offset 14, -4
+ 333 000c 0446     		mov	r4, r0
+ARM GAS  /tmp/cchYQSPX.s 			page 8
+
+
+  66:Core/Drivers/dht11.c **** 
+  67:Core/Drivers/dht11.c ****     // Read duration since last falling edge
+  68:Core/Drivers/dht11.c ****     uint32_t pulse_width = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_1);
+ 334              		.loc 1 68 5 is_stmt 1 view .LVU69
+ 335              		.loc 1 68 28 is_stmt 0 view .LVU70
+ 336 000e 0021     		movs	r1, #0
+ 337 0010 FFF7FEFF 		bl	HAL_TIM_ReadCapturedValue
+ 338              	.LVL17:
+  69:Core/Drivers/dht11.c ****     __HAL_TIM_SET_COUNTER(htim, 0);
+ 339              		.loc 1 69 5 is_stmt 1 view .LVU71
+ 340 0014 2368     		ldr	r3, [r4]
+ 341 0016 0022     		movs	r2, #0
+ 342 0018 5A62     		str	r2, [r3, #36]
+  70:Core/Drivers/dht11.c **** 
+  71:Core/Drivers/dht11.c ****     // Bit_index 0 to 39 are the actual 40 data bits
+  72:Core/Drivers/dht11.c ****     if (bit_index >= 0 && bit_index < 40) {
+ 343              		.loc 1 72 5 view .LVU72
+ 344              		.loc 1 72 24 is_stmt 0 view .LVU73
+ 345 001a 144B     		ldr	r3, .L32+4
+ 346 001c 93F90020 		ldrsb	r2, [r3]
+ 347 0020 D3B2     		uxtb	r3, r2
+ 348              		.loc 1 72 8 view .LVU74
+ 349 0022 272B     		cmp	r3, #39
+ 350 0024 0DD8     		bhi	.L23
+  73:Core/Drivers/dht11.c ****         dht11_data[bit_index / 8] <<= 1;
+ 351              		.loc 1 73 9 is_stmt 1 view .LVU75
+ 352              		.loc 1 73 19 is_stmt 0 view .LVU76
+ 353 0026 1146     		mov	r1, r2
+ 354 0028 002A     		cmp	r2, #0
+ 355 002a 11DB     		blt	.L30
+ 356              	.L24:
+ 357 002c C910     		asrs	r1, r1, #3
+ 358 002e 104C     		ldr	r4, .L32+8
+ 359              	.LVL18:
+ 360              		.loc 1 73 19 view .LVU77
+ 361 0030 625C     		ldrb	r2, [r4, r1]	@ zero_extendqisi2
+ 362              		.loc 1 73 35 view .LVU78
+ 363 0032 5200     		lsls	r2, r2, #1
+ 364 0034 D2B2     		uxtb	r2, r2
+ 365 0036 6254     		strb	r2, [r4, r1]
+  74:Core/Drivers/dht11.c ****         if (pulse_width > DHT_BIT_THRESHOLD) {
+ 366              		.loc 1 74 9 is_stmt 1 view .LVU79
+ 367              		.loc 1 74 12 is_stmt 0 view .LVU80
+ 368 0038 6428     		cmp	r0, #100
+ 369 003a 02D9     		bls	.L23
+  75:Core/Drivers/dht11.c ****             dht11_data[bit_index / 8] |= 1;
+ 370              		.loc 1 75 13 is_stmt 1 view .LVU81
+ 371              		.loc 1 75 39 is_stmt 0 view .LVU82
+ 372 003c 42F00102 		orr	r2, r2, #1
+ 373 0040 6254     		strb	r2, [r4, r1]
+ 374              	.L23:
+  76:Core/Drivers/dht11.c ****         }
+  77:Core/Drivers/dht11.c ****     }
+  78:Core/Drivers/dht11.c ****     
+  79:Core/Drivers/dht11.c ****     bit_index++;
+ 375              		.loc 1 79 5 is_stmt 1 view .LVU83
+ 376              		.loc 1 79 14 is_stmt 0 view .LVU84
+ARM GAS  /tmp/cchYQSPX.s 			page 9
+
+
+ 377 0042 0133     		adds	r3, r3, #1
+ 378 0044 5BB2     		sxtb	r3, r3
+ 379 0046 094A     		ldr	r2, .L32+4
+ 380 0048 1370     		strb	r3, [r2]
+  80:Core/Drivers/dht11.c **** 
+  81:Core/Drivers/dht11.c ****     // When all 40 bits + handshake are received
+  82:Core/Drivers/dht11.c ****     if (bit_index >= 40) {
+ 381              		.loc 1 82 5 is_stmt 1 view .LVU85
+ 382              		.loc 1 82 8 is_stmt 0 view .LVU86
+ 383 004a 272B     		cmp	r3, #39
+ 384 004c 02DC     		bgt	.L31
+ 385              	.LVL19:
+ 386              	.L21:
+  83:Core/Drivers/dht11.c ****         HAL_TIM_IC_Stop_IT(&htim3, TIM_CHANNEL_1);
+  84:Core/Drivers/dht11.c ****         DHT_Get_Results();
+  85:Core/Drivers/dht11.c ****         dht_state = DHT_IDLE;
+  86:Core/Drivers/dht11.c ****     }
+  87:Core/Drivers/dht11.c **** }...
+ 387              		.loc 1 87 1 view .LVU87
+ 388 004e 10BD     		pop	{r4, pc}
+ 389              	.LVL20:
+ 390              	.L30:
+  73:Core/Drivers/dht11.c ****         dht11_data[bit_index / 8] <<= 1;
+ 391              		.loc 1 73 19 view .LVU88
+ 392 0050 D11D     		adds	r1, r2, #7
+ 393 0052 EBE7     		b	.L24
+ 394              	.LVL21:
+ 395              	.L31:
+  83:Core/Drivers/dht11.c ****         HAL_TIM_IC_Stop_IT(&htim3, TIM_CHANNEL_1);
+ 396              		.loc 1 83 9 is_stmt 1 view .LVU89
+ 397 0054 0021     		movs	r1, #0
+ 398 0056 0748     		ldr	r0, .L32+12
+ 399              	.LVL22:
+  83:Core/Drivers/dht11.c ****         HAL_TIM_IC_Stop_IT(&htim3, TIM_CHANNEL_1);
+ 400              		.loc 1 83 9 is_stmt 0 view .LVU90
+ 401 0058 FFF7FEFF 		bl	HAL_TIM_IC_Stop_IT
+ 402              	.LVL23:
+  84:Core/Drivers/dht11.c ****         DHT_Get_Results();
+ 403              		.loc 1 84 9 is_stmt 1 view .LVU91
+ 404 005c FFF7FEFF 		bl	DHT_Get_Results
+ 405              	.LVL24:
+  85:Core/Drivers/dht11.c ****         dht_state = DHT_IDLE;
+ 406              		.loc 1 85 9 view .LVU92
+  85:Core/Drivers/dht11.c ****         dht_state = DHT_IDLE;
+ 407              		.loc 1 85 19 is_stmt 0 view .LVU93
+ 408 0060 014B     		ldr	r3, .L32
+ 409 0062 0022     		movs	r2, #0
+ 410 0064 1A70     		strb	r2, [r3]
+ 411 0066 F2E7     		b	.L21
+ 412              	.L33:
+ 413              		.align	2
+ 414              	.L32:
+ 415 0068 00000000 		.word	dht_state
+ 416 006c 00000000 		.word	bit_index
+ 417 0070 00000000 		.word	dht11_data
+ 418 0074 00000000 		.word	htim3
+ 419              		.cfi_endproc
+ARM GAS  /tmp/cchYQSPX.s 			page 10
+
+
+ 420              	.LFE138:
+ 422              		.global	dht_temperature
+ 423              		.section	.bss.dht_temperature,"aw",%nobits
+ 424              		.align	1
+ 427              	dht_temperature:
+ 428 0000 0000     		.space	2
+ 429              		.global	dht_humidity
+ 430              		.section	.bss.dht_humidity,"aw",%nobits
+ 431              		.align	1
+ 434              	dht_humidity:
+ 435 0000 0000     		.space	2
+ 436              		.global	dht_state
+ 437              		.section	.bss.dht_state,"aw",%nobits
+ 440              	dht_state:
+ 441 0000 00       		.space	1
+ 442              		.global	bit_index
+ 443              		.section	.bss.bit_index,"aw",%nobits
+ 446              	bit_index:
+ 447 0000 00       		.space	1
+ 448              		.global	dht11_data
+ 449              		.section	.bss.dht11_data,"aw",%nobits
+ 450              		.align	2
+ 453              	dht11_data:
+ 454 0000 00000000 		.space	5
+ 454      00
+ 455              		.text
+ 456              	.Letext0:
+ 457              		.file 2 "/usr/arm-none-eabi/include/machine/_default_types.h"
+ 458              		.file 3 "/usr/arm-none-eabi/include/sys/_stdint.h"
+ 459              		.file 4 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f446xx.h"
+ 460              		.file 5 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+ 461              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h"
+ 462              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
+ 463              		.file 8 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h"
+ 464              		.file 9 "Core/Drivers/dht11.h"
+ 465              		.file 10 "/usr/arm-none-eabi/include/string.h"
+ 466              		.file 11 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h"
+ARM GAS  /tmp/cchYQSPX.s 			page 11
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 dht11.c
+     /tmp/cchYQSPX.s:21     .text.DHT_init:00000000 $t
+     /tmp/cchYQSPX.s:27     .text.DHT_init:00000000 DHT_init
+     /tmp/cchYQSPX.s:51     .text.DHT_init:00000014 $d
+     /tmp/cchYQSPX.s:56     .text.DHT_Start:00000000 $t
+     /tmp/cchYQSPX.s:62     .text.DHT_Start:00000000 DHT_Start
+     /tmp/cchYQSPX.s:169    .text.DHT_Start:0000006c $d
+     /tmp/cchYQSPX.s:175    .text.DHT_Read:00000000 $t
+     /tmp/cchYQSPX.s:181    .text.DHT_Read:00000000 DHT_Read
+     /tmp/cchYQSPX.s:215    .text.DHT_Read:0000001c $d
+     /tmp/cchYQSPX.s:446    .bss.bit_index:00000000 bit_index
+     /tmp/cchYQSPX.s:453    .bss.dht11_data:00000000 dht11_data
+     /tmp/cchYQSPX.s:440    .bss.dht_state:00000000 dht_state
+     /tmp/cchYQSPX.s:222    .text.DHT_Get_Results:00000000 $t
+     /tmp/cchYQSPX.s:228    .text.DHT_Get_Results:00000000 DHT_Get_Results
+     /tmp/cchYQSPX.s:298    .text.DHT_Get_Results:0000004c $d
+     /tmp/cchYQSPX.s:434    .bss.dht_humidity:00000000 dht_humidity
+     /tmp/cchYQSPX.s:427    .bss.dht_temperature:00000000 dht_temperature
+     /tmp/cchYQSPX.s:305    .text.DHT_TIM_IC_CaptureCallback:00000000 $t
+     /tmp/cchYQSPX.s:311    .text.DHT_TIM_IC_CaptureCallback:00000000 DHT_TIM_IC_CaptureCallback
+     /tmp/cchYQSPX.s:415    .text.DHT_TIM_IC_CaptureCallback:00000068 $d
+     /tmp/cchYQSPX.s:424    .bss.dht_temperature:00000000 $d
+     /tmp/cchYQSPX.s:431    .bss.dht_humidity:00000000 $d
+     /tmp/cchYQSPX.s:441    .bss.dht_state:00000000 $d
+     /tmp/cchYQSPX.s:447    .bss.bit_index:00000000 $d
+     /tmp/cchYQSPX.s:450    .bss.dht11_data:00000000 $d
+
+UNDEFINED SYMBOLS
+HAL_TIM_Base_Start_IT
+HAL_Delay
+htim3
+HAL_GPIO_Init
+HAL_GPIO_WritePin
+HAL_TIM_IC_Start_IT
+HAL_TIM_ReadCapturedValue
+HAL_TIM_IC_Stop_IT

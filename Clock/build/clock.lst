@@ -1,0 +1,162 @@
+ARM GAS  /tmp/ccyXMVTo.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"clock.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "Core/Drivers/clock.c"
+  20              		.section	.text.RTC_ReadTime,"ax",%progbits
+  21              		.align	1
+  22              		.global	RTC_ReadTime
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	RTC_ReadTime:
+  28              	.LFB134:
+   1:Core/Drivers/clock.c **** #include "stm32f4xx_hal.h"
+   2:Core/Drivers/clock.c **** #include "clock.h"
+   3:Core/Drivers/clock.c **** #include "main.h"
+   4:Core/Drivers/clock.c **** 
+   5:Core/Drivers/clock.c **** extern RTC_HandleTypeDef hrtc;
+   6:Core/Drivers/clock.c **** extern RTC_TimeTypeDef sTime;
+   7:Core/Drivers/clock.c **** extern RTC_DateTypeDef sDate;
+   8:Core/Drivers/clock.c **** 
+   9:Core/Drivers/clock.c **** void RTC_ReadTime(void)
+  10:Core/Drivers/clock.c **** {
+  29              		.loc 1 10 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33 0000 10B5     		push	{r4, lr}
+  34              	.LCFI0:
+  35              		.cfi_def_cfa_offset 8
+  36              		.cfi_offset 4, -8
+  37              		.cfi_offset 14, -4
+  11:Core/Drivers/clock.c ****   HAL_RTC_GetTime(&hrtc, &sTime, RTC_FORMAT_BIN);
+  38              		.loc 1 11 3 view .LVU1
+  39 0002 064C     		ldr	r4, .L3
+  40 0004 0022     		movs	r2, #0
+  41 0006 0649     		ldr	r1, .L3+4
+  42 0008 2046     		mov	r0, r4
+  43 000a FFF7FEFF 		bl	HAL_RTC_GetTime
+  44              	.LVL0:
+  12:Core/Drivers/clock.c ****   HAL_RTC_GetDate(&hrtc, &sDate, RTC_FORMAT_BIN);
+  45              		.loc 1 12 3 view .LVU2
+  46 000e 0022     		movs	r2, #0
+ARM GAS  /tmp/ccyXMVTo.s 			page 2
+
+
+  47 0010 0449     		ldr	r1, .L3+8
+  48 0012 2046     		mov	r0, r4
+  49 0014 FFF7FEFF 		bl	HAL_RTC_GetDate
+  50              	.LVL1:
+  13:Core/Drivers/clock.c **** }
+  51              		.loc 1 13 1 is_stmt 0 view .LVU3
+  52 0018 10BD     		pop	{r4, pc}
+  53              	.L4:
+  54 001a 00BF     		.align	2
+  55              	.L3:
+  56 001c 00000000 		.word	hrtc
+  57 0020 00000000 		.word	sTime
+  58 0024 00000000 		.word	sDate
+  59              		.cfi_endproc
+  60              	.LFE134:
+  62              		.section	.text.SetTime,"ax",%progbits
+  63              		.align	1
+  64              		.global	SetTime
+  65              		.syntax unified
+  66              		.thumb
+  67              		.thumb_func
+  69              	SetTime:
+  70              	.LVL2:
+  71              	.LFB135:
+  14:Core/Drivers/clock.c **** 
+  15:Core/Drivers/clock.c **** void SetTime(RTC_TimeTypeDef *time, RTC_DateTypeDef *date) {
+  72              		.loc 1 15 60 is_stmt 1 view -0
+  73              		.cfi_startproc
+  74              		@ args = 0, pretend = 0, frame = 0
+  75              		@ frame_needed = 0, uses_anonymous_args = 0
+  76              		.loc 1 15 60 is_stmt 0 view .LVU5
+  77 0000 38B5     		push	{r3, r4, r5, lr}
+  78              	.LCFI1:
+  79              		.cfi_def_cfa_offset 16
+  80              		.cfi_offset 3, -16
+  81              		.cfi_offset 4, -12
+  82              		.cfi_offset 5, -8
+  83              		.cfi_offset 14, -4
+  84 0002 0C46     		mov	r4, r1
+  16:Core/Drivers/clock.c ****   HAL_RTC_SetTime(&hrtc, time, RTC_FORMAT_BIN);
+  85              		.loc 1 16 3 is_stmt 1 view .LVU6
+  86 0004 054D     		ldr	r5, .L7
+  87 0006 0022     		movs	r2, #0
+  88 0008 0146     		mov	r1, r0
+  89              	.LVL3:
+  90              		.loc 1 16 3 is_stmt 0 view .LVU7
+  91 000a 2846     		mov	r0, r5
+  92              	.LVL4:
+  93              		.loc 1 16 3 view .LVU8
+  94 000c FFF7FEFF 		bl	HAL_RTC_SetTime
+  95              	.LVL5:
+  17:Core/Drivers/clock.c ****   HAL_RTC_SetDate(&hrtc, date, RTC_FORMAT_BIN);
+  96              		.loc 1 17 3 is_stmt 1 view .LVU9
+  97 0010 0022     		movs	r2, #0
+  98 0012 2146     		mov	r1, r4
+  99 0014 2846     		mov	r0, r5
+ 100 0016 FFF7FEFF 		bl	HAL_RTC_SetDate
+ARM GAS  /tmp/ccyXMVTo.s 			page 3
+
+
+ 101              	.LVL6:
+  18:Core/Drivers/clock.c **** }...
+ 102              		.loc 1 18 1 is_stmt 0 view .LVU10
+ 103 001a 38BD     		pop	{r3, r4, r5, pc}
+ 104              	.LVL7:
+ 105              	.L8:
+ 106              		.loc 1 18 1 view .LVU11
+ 107              		.align	2
+ 108              	.L7:
+ 109 001c 00000000 		.word	hrtc
+ 110              		.cfi_endproc
+ 111              	.LFE135:
+ 113              		.text
+ 114              	.Letext0:
+ 115              		.file 2 "/usr/arm-none-eabi/include/machine/_default_types.h"
+ 116              		.file 3 "/usr/arm-none-eabi/include/sys/_stdint.h"
+ 117              		.file 4 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f446xx.h"
+ 118              		.file 5 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+ 119              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rtc.h"
+ARM GAS  /tmp/ccyXMVTo.s 			page 4
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 clock.c
+     /tmp/ccyXMVTo.s:21     .text.RTC_ReadTime:00000000 $t
+     /tmp/ccyXMVTo.s:27     .text.RTC_ReadTime:00000000 RTC_ReadTime
+     /tmp/ccyXMVTo.s:56     .text.RTC_ReadTime:0000001c $d
+     /tmp/ccyXMVTo.s:63     .text.SetTime:00000000 $t
+     /tmp/ccyXMVTo.s:69     .text.SetTime:00000000 SetTime
+     /tmp/ccyXMVTo.s:109    .text.SetTime:0000001c $d
+
+UNDEFINED SYMBOLS
+HAL_RTC_GetTime
+HAL_RTC_GetDate
+hrtc
+sTime
+sDate
+HAL_RTC_SetTime
+HAL_RTC_SetDate
